@@ -1,29 +1,37 @@
 <template>
   <div class="todo__action">
-    <input v-model="inputValue" class="input default-border" type="text" placeholder="Enter task">
+    <input
+        class="input default-border"
+        :value="modelValue"
+        @keyup="$emit('update:modelValue', $event.target.value)"
+        type="text"
+        placeholder="Enter task"
+    >
     <button @click="addTask" class="btn">SUBMIT</button>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      inputValue: "",
-    }
+  props: {
+    modelValue: String
   },
 
   methods: {
-    addTask() {
-      if (this.inputValue.length === 0) return;
-      const task = {
-        id: Date.now(),
-        status: "to-do",
-        title: this.inputValue
-      }
-      this.$emit("create", task);
+    isValid() {
+      return this.modelValue.length !== 0
+    },
 
-      this.inputValue = "";
+    addTask() {
+      if (this.isValid()) {
+        this.$emit("create", {
+          id: Date.now(),
+          status: "to-do",
+          title: this.modelValue
+        });
+
+        this.$emit('update:modelValue', '')
+      }
     }
   }
 }

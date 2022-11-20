@@ -6,13 +6,7 @@
       >{{ task.title }}</span>
     </td>
     <td @click="this.$emit('change', task)" class="task__status">
-      <span
-          :class="{
-          'to-do': task.status === 'to-do',
-          'in-progress': task.status === 'in-progress',
-          'finished-status': task.status === 'finished',
-        }"
-      >{{ task.status }}</span>
+      <span :class="getTodoClassNames">{{ task.status }}</span>
     </td>
     <td>
       <div @click="this.$emit('edit', task)" class="task__icon">
@@ -31,7 +25,19 @@
 export default {
   props: {
     task: Object
-  }
+  },
+
+  computed: {
+    getTodoClassNames() {
+      const allowedClass = {
+        "to-do": "todo",
+        "in-progress": "in-progress",
+        "finished": "finished-status"
+      }
+
+      return allowedClass[this.task.status]
+    }
+  },
 }
 </script>
 

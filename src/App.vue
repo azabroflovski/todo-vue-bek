@@ -2,9 +2,7 @@
   <div class="todo">
     <h2 class="todo__header">My Vue Todo App</h2>
 
-    <post-form
-      @create="addTask"
-    />
+    <post-form v-model="inputValue" @create="addTask" />
 
     <task-table
       :tasks="tasks"
@@ -39,11 +37,11 @@ export default {
 
   methods: {
     addTask(task) {
-      if (this.editedTask === null) {
-        this.tasks.push(task);
+      if (this.editedTask && this.editedTask.id) {
+        const taskIndex = this.tasks.findIndex(item => item.id === this.editedTask.id)
+        this.tasks[taskIndex] = task
       } else {
-        this.editedTask.title = this.inputValue;
-        this.editedTask = null;
+        this.tasks.push(task);
       }
     },
 
@@ -52,8 +50,8 @@ export default {
     },
 
     editTask(task) {
-      this.inputValue = task.title;
       this.editedTask = task;
+      this.inputValue = task.title;
     },
 
     changeStatus(task) {
